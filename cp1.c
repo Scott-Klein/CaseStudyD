@@ -27,17 +27,18 @@ int main(int ac, char *av[])
 
     if ((in_fd = open(av[1], O_RDONLY)) == -1)
         oops("Cannot open ", av[1]);
-
+    //get info on the infile
     fstat(in_fd, &sb1);
 
     createFile(&out_fd, av);
 
+    //get info on the outfile
     fstat(out_fd, &sb2);
 
     //if file1 inode and file2 inode are the same and on the same device
-    if (sb1.st_ino == sb2.st_ino && sb1.st_dev == sb2.st_dev) // since files are frequently on the same device, compare inode first to short circuit the comparison for slight performance gain.
+    if (sb1.st_ino == sb2.st_ino && sb1.st_dev == sb2.st_dev) //check inodes, and check device
     {
-        oops("Files are identical: ", av[2]);
+        oops("Both files are the same file: ", av[2]);
     }
 
     fchmod(out_fd, sb1.st_mode); // Set the same permissions baby.
